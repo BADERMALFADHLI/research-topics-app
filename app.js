@@ -29,6 +29,12 @@ async function loadTopics() {
 // عرض المواضيع
 function renderTopics() {
     const grid = document.getElementById('topicsGrid');
+    
+    // تجنب إعادة الرسم إذا كان المستخدم يتفاعل
+    if (isUserInteracting()) {
+        return;
+    }
+    
     grid.innerHTML = '';
 
     if (topics.length === 0) {
@@ -408,10 +414,36 @@ function startAutoUpdate() {
     }
     
     updateInterval = setInterval(async () => {
-        if (!document.hidden) { // تحديث فقط عندما تكون الصفحة مرئية
+        // تحديث فقط إذا لم يكن المستخدم يكتب أو يتفاعل مع النماذج
+        if (!document.hidden && !isUserInteracting()) {
             await loadTopics();
         }
     }, CONFIG.UPDATE_INTERVAL);
+}
+
+// فحص ما إذا كان المستخدم يتفاعل مع النماذج
+function isUserInteracting() {
+    // فحص إذا كان هناك حقل نشط (focus)
+    const activeElement = document.activeElement;
+    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+        return true;
+    }
+    
+    // فحص إذا كان النموذج مفتوح
+    const modal = document.getElementById('reservationModal');
+    if (modal && modal.style.display === 'flex') {
+        return true;
+    }
+    
+    // فحص إذا كان المستخدم في وضع الإدارة ويكتب
+    if (isAdmin) {
+        const newTopicInput = document.getElementById('newTopicTitle');
+        if (newTopicInput && newTopicInput === activeElement) {
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 // إيقاف التحديث التلقائي
@@ -478,3 +510,43 @@ document.addEventListener('visibilitychange', function() {
 window.addEventListener('beforeunload', function() {
     stopAutoUpdate();
 });
+
+
+// إضافة معالجات لتحسين تجربة المستخدم
+let lastUserActivity = Date.now();
+
+// تتبع نشاط المستخدم
+function trackUserActivity() {
+    lastUserActivity = Date.now();
+}
+
+// إضافة مستمعات للأحداث
+document.addEventListener('DOMContentLoaded', function() {
+    // تتبع نشاط المستخدم
+    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(event => {
+        document.addEventListener(event, trackUserActivity, true);
+    });
+});
+
+// تحسين دالة isUserInteracting
+function isUserInteractingEnhanced() {
+    // إذا كان هناك نشاط حديث (أقل من 3 ثوان)
+    if (Date.now() - lastUserActivity < 3000) {
+        return true;
+    }
+    
+    return isUserInteracting();
+}
+
+// استخدام الدالة المحسنة في التحديث
+function startAutoUpdateEnhanced() {
+    if (updateInterval) {
+        clearInterval(updateInterval);
+    }
+    
+    updateInterval = setInterval(async () => {
+        if (!document.hidden && !isUserInteractingEnhanced()) {
+            await loadTopics();
+        }
+    }, CONFIG.UPDATE_INTERVAL);
+}
