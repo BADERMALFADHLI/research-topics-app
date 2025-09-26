@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام اختيار مواضيع البحث</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+    <meta name="description" content="نظام اختيار مواضيع البحث - اختر موضوع بحثك بسهولة ويسر">
+    <meta name="keywords" content="مواضيع البحث, اختيار الموضوع, نظام الحجز, البحث العلمي">
+    <meta name="author" content="نظام اختيار مواضيع البحث">
+</head>
+<body>
+    <!-- مؤشر التحميل -->
+    <div class="loading-indicator" id="loadingIndicator">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="container">
+        <!-- الرأس -->
+        <div class="header">
+            <h1>نظام اختيار مواضيع البحث</h1>
+            <p>اختر موضوع بحثك بسهولة ويسر</p>
+        </div>
+
+        <!-- قسم الإدارة -->
+        <div class="admin-section">
+            <div class="admin-login" id="adminLogin">
+                <input type="password" id="adminPassword" placeholder="كلمة مرور الإدارة" autocomplete="current-password">
+                <button class="btn btn-primary" onclick="adminLogin()">
+                    🔐 دخول الإدارة
+                </button>
+            </div>
+            
+            <div class="admin-panel" id="adminPanel">
+                <input type="text" id="newTopicTitle" placeholder="عنوان الموضوع الجديد" maxlength="200">
+                <button class="btn btn-success" onclick="addTopic()">
+                    ➕ إضافة موضوع
+                </button>
+                <button class="btn btn-warning" onclick="exportData()">
+                    📊 تصدير البيانات
+                </button>
+                <button class="btn btn-danger" onclick="adminLogout()">
+                    🚪 تسجيل خروج
+                </button>
+            </div>
+        </div>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="content">
+            <!-- الإحصائيات -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTopics">0</div>
+                    <div class="stat-label">📚 إجمالي المواضيع</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="availableTopics">0</div>
+                    <div class="stat-label">✅ المواضيع المتاحة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="reservedTopics">0</div>
+                    <div class="stat-label">🔒 المواضيع المحجوزة</div>
+                </div>
+            </div>
+
+            <!-- حاوي التنبيهات -->
+            <div id="alertContainer"></div>
+
+            <!-- شبكة المواضيع -->
+            <div class="topics-grid" id="topicsGrid">
+                <!-- سيتم إدراج المواضيع هنا تلقائياً -->
+            </div>
+
+            <!-- جدول الإدارة -->
+            <div id="adminTableContainer" style="display: none;">
+                <h3>📋 جدول إدارة المواضيع</h3>
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>الرقم</th>
+                                <th>عنوان الموضوع</th>
+                                <th>الحالة</th>
+                                <th>اسم الطالب</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody">
+                            <!-- سيتم إدراج البيانات هنا تلقائياً -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- التذييل -->
+        <div class="footer">
+            <p>&copy; 2024 نظام اختيار مواضيع البحث - جميع الحقوق محفوظة</p>
+            <p>آخر تحديث: <span id="lastUpdate">جاري التحميل...</span></p>
+        </div>
+    </div>
+
+    <!-- نموذج حجز الموضوع -->
+    <div class="modal" id="reservationModal">
+        <div class="modal-content">
+            <h3>📝 حجز موضوع البحث</h3>
+            <p><strong>الموضوع:</strong> <span id="modalTopicTitle"></span></p>
+            
+            <div class="form-group">
+                <label for="studentName">👤 اسم الطالب:</label>
+                <input type="text" id="studentName" required maxlength="100" placeholder="أدخل اسمك الكامل">
+            </div>
+            
+            <div class="form-group">
+                <label for="studentEmail">📧 البريد الإلكتروني:</label>
+                <input type="email" id="studentEmail" required maxlength="100" placeholder="example@email.com">
+            </div>
+            
+            <div class="input-group" style="justify-content: center; margin-top: 20px;">
+                <button class="btn btn-success" onclick="confirmReservation()">
+                    ✅ تأكيد الحجز
+                </button>
+                <button class="btn btn-danger" onclick="closeModal()">
+                    ❌ إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- تحميل الملفات -->
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+
+    <!-- تحديث وقت آخر تحديث -->
+    <script>
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('ar-SA', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = timeString;
+        }
+
+        // تحديث الوقت كل ثانية
+        setInterval(updateLastUpdateTime, 1000);
+        updateLastUpdateTime();
+
+        // إضافة تأثيرات صوتية (اختيارية)
+        function playNotificationSound() {
+            // يمكن إضافة صوت تنبيه هنا إذا رغبت
+            // const audio = new Audio('notification.mp3');
+            // audio.play().catch(() => {});
+        }
+
+        // تحسين تجربة المستخدم
+        document.addEventListener('DOMContentLoaded', function() {
+            // إضافة تأثير الكتابة للعنوان
+            const title = document.querySelector('.header h1');
+            const originalText = title.textContent;
+            title.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < originalText.length) {
+                    title.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            };
+            
+            setTimeout(typeWriter, 500);
+
+            // إضافة تأثير التمرير السلس للإحصائيات
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeIn 0.6s ease-in-out';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.stat-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+
+        // معالجة الأخطاء العامة
+        window.addEventListener('error', function(e) {
+            console.error('خطأ في التطبيق:', e.error);
+            showAlert('حدث خطأ غير متوقع. يرجى إعادة تحميل الصفحة.', 'danger');
+        });
+
+        // معالجة فقدان الاتصال بالإنترنت
+        window.addEventListener('online', function() {
+            showAlert('تم استعادة الاتصال بالإنترنت', 'success');
+            loadTopics();
+        });
+
+        window.addEventListener('offline', function() {
+            showAlert('تم فقدان الاتصال بالإنترنت', 'danger');
+        });
+    </script>
+</body>
+</html>
