@@ -61,9 +61,10 @@ function saveTopics() {
 function renderTopics() {
     const grid = document.getElementById('topicsGrid');
     
-    if (isUserInteracting()) {
-        return;
-    }
+    // السماح بإعادة الرسم دائماً عند الحجز أو التحديث المباشر
+    // if (isUserInteracting()) {
+    //     return;
+    // }
     
     grid.innerHTML = '';
 
@@ -192,8 +193,12 @@ async function confirmReservation() {
             const now = new Date().toLocaleString('ar-SA');
             showAlert(`تم حجز الموضوع بنجاح! ✅\nالوقت: ${now}`, 'success');
             closeModal();
-            renderTopics();
-            updateStats();
+            
+            // إعادة رسم المواضيع والإحصائيات فوراً
+            setTimeout(() => {
+                renderTopics();
+                updateStats();
+            }, 100);
         } else {
             showAlert('هذا الموضوع محجوز بالفعل', 'danger');
         }

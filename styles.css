@@ -190,17 +190,17 @@ body {
 
 .topic-card.available {
     border-color: #28a745;
-    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
 }
 
 .topic-card.available:hover {
     border-color: #20c997;
-    background: linear-gradient(135deg, #c3e6cb 0%, #b8dacc 100%);
+    background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
 }
 
 .topic-card.reserved {
     border-color: #dc3545;
-    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
     cursor: not-allowed;
 }
 
@@ -223,10 +223,11 @@ body {
     font-size: 1.1rem;
     font-weight: bold;
     margin-bottom: 15px;
-    color: #2c3e50;
+    color: white;
     line-height: 1.4;
     position: relative;
     z-index: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .topic-status {
@@ -254,9 +255,10 @@ body {
 .reserved-info {
     margin-top: 10px;
     font-size: 0.8rem;
-    color: #6c757d;
+    color: white;
     position: relative;
     z-index: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* الأزرار */
