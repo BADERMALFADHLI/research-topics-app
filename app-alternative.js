@@ -15,8 +15,8 @@ const DEMO_TOPICS = [
     { id: 4, title: "أنظمة إدارة قواعد البيانات", status: "available", student: "", studentEmail: "" },
     { id: 5, title: "الحوسبة السحابية في الشركات", status: "available", student: "", studentEmail: "" },
     { id: 6, title: "أمن الشبكات والحماية من الهجمات", status: "available", student: "", studentEmail: "" },
-    { id: 7, title: "تطوير مواقع الويب التفاعلية", status: "available", student: "", studentEmail: "" },
-    { id: 8, title: "إنترنت الأشياء (IoT) والمدن الذكية", status: "available", student: "", studentEmail: "" }
+    { id: 7, title: "التطور التاريخي للمكتب", status: "available", student: "", studentEmail: "" },
+    { id: 8, title: "أهمية وتحديات المكتب الحديث", status: "available", student: "", studentEmail: "" }
 ];
 
 // تحميل البيانات (محاكاة)

@@ -496,12 +496,13 @@ input[type="password"]:focus {
     padding: 12px;
     text-align: right;
     border-bottom: 1px solid #e9ecef;
+    color: #212529;
 }
 
 .admin-table th {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     font-weight: bold;
-    color: #495057;
+    color: #212529;
     position: sticky;
     top: 0;
     z-index: 10;
