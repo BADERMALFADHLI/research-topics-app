@@ -7,7 +7,7 @@ const CONFIG = {
     ADMIN_PASSWORD: 'admin123',
     
     // إعدادات التحديث
-    UPDATE_INTERVAL: 5000, // كل 5 ثوان
+    UPDATE_INTERVAL: 20000, // كل 20 ثانية - أقل إزعاجاً
     
     // إعدادات التطبيق
     APP_TITLE: 'نظام اختيار مواضيع البحث',
